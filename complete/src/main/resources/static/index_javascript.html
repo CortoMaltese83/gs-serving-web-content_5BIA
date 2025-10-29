@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Greeting AJAX</title>
+</head>
+<body>
+<h1>Greeting via AJAX</h1>
+
+<label for="name">Enter your name:</label>
+<input type="text" id="name" name="name" required />
+<button id="sendBtn">Get Greeting</button>
+
+<p id="result"></p>
+
+<script>
+  document.getElementById('sendBtn').addEventListener('click', async () => {
+    const name = document.getElementById('name').value.trim();
+    if (!name) {
+      alert('Please enter your name.');
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/greeting?name=${encodeURIComponent(name)}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+
+      const data = await response.json();
+      document.getElementById('result').textContent = data.content || JSON.stringify(data);
+
+    } catch (error) {
+      console.error('Fetch error:', error);
+      document.getElementById('result').textContent = 'An error occurred.';
+    }
+  });
+</script>
+</body>
+</html>
